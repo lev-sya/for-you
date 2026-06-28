@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ✨</title>
+    <style>
+        /* Menggunakan font yang elegan dan modern */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Efek Kelopak Bunga Berjatuhan (Aesthetic Canvas) */
+        .scenery {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(to bottom right, #ffb7b2, #ffdac1);
+            border-radius: 150% 0 150% 150%;
+            opacity: 0.7;
+            animation: float 10s infinite linear;
+        }
+
+        /* Kartu Utama */
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(165, 140, 140, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            z-index: 10;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeInUp 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Bagian Atas / Dekorasi Icon */
+        .icon {
+            font-size: 28px;
+            color: #e5989b;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Judul yang Elegan (Serif Font) */
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: #6d5959;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        /* Garis Pembatas Minimalis */
+        .line {
+            width: 50px;
+            height: 1px;
+            background-color: #b5838d;
+            margin: 0 auto 25px auto;
+        }
+
+        /* Teks Pesan */
+        p {
+            font-size: 14px;
+            color: #807a7a;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        /* Tombol Interaktif */
+        .btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: #b5838d;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            font-weight: 400;
+            box-shadow: 0 8px 20px rgba(181, 131, 141, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #6d5959;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(109, 89, 89, 0.3);
+        }
+
+        /* Pop-up Pesan Rahasia */
+        .hidden-message {
+            display: none;
+            margin-top: 25px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 18px;
+            color: #b5838d;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        /* --- KEYFRAMES ANIMASI --- */
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Efek Bunga Berjatuhan -->
+    <div class="scenery" id="scenery"></div>
+
+    <!-- Kartu Elegan -->
+    <div class="card">
+        <div class="icon">✦</div>
+        <h1 id="title">Halo, Kamu.</h1>
+        <div class="line"></div>
+        <p id="main-text">
+            "Ada beberapa hal yang ga perlu alasan, salah satunya adalah alasan kenapa hari ini kamu terlihat luar biasa. Terima kasih ya sudah berusaha sejauh ini. Semangat buat hari ini!"
+        </p>
+        <button class="btn" onclick="revealMessage()">CLICK ME</button>
+        
+        <!-- Pesan Tersembunyi saat di-klik -->
+        <div class="hidden-message" id="secret">
+            Take care of yourself, okay? ✨
+        </div>
+    </div>
+
+    <script>
+        // Membuat kelopak bunga acak secara otomatis
+        const scenery = document.getElementById('scenery');
+        const petalCount = 25;
+
+        for (let i = 0; i < petalCount; i++) {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Variasi ukuran, posisi, dan kecepatan kelopak bunga
+            const size = Math.random() * 12 + 8;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            petal.style.delay = `${Math.random() * 8}s`;
+            petal.style.animationDuration = `${Math.random() * 6 + 6}s`;
+            
+            scenery.appendChild(petal);
+        }
+
+        // Fungsi interaktif pas tombol diklik
+        function revealMessage() {
+            const secret = document.getElementById('secret');
+            const btn = document.querySelector('.btn');
+            
+            secret.style.display = 'block';
+            btn.style.display = 'none'; // Menghilangkan tombol setelah diklik
+        }
+    </script>
+</body>
+</html>
