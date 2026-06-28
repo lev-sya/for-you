@@ -24,7 +24,7 @@
             perspective: 1000px;
         }
 
-        /* Background Bintang */
+        /* Latar Belakang Bintang */
         .scenery {
             position: absolute;
             width: 100%;
@@ -43,7 +43,7 @@
             opacity: 0.5;
         }
 
-        /* Container Utama */
+        /* Container Utama Kartu */
         .card-container {
             position: relative;
             width: 90%;
@@ -52,7 +52,7 @@
             z-index: 10;
         }
 
-        /* Efek Tumpukan Kartu Belakang */
+        /* Efek Tumpukan Kartu di Belakang */
         .card-shadow-1, .card-shadow-2 {
             position: absolute;
             width: 100%;
@@ -73,7 +73,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 35px 25px;
@@ -86,7 +86,7 @@
             align-items: center;
         }
 
-        /* Progress Bar */
+        /* Progress Bar Atas */
         .progress-container {
             display: flex;
             gap: 8px;
@@ -106,33 +106,28 @@
             background: #b5838d;
         }
 
-        /* Area Konten (Tinggi dikunci agar tombol gak tergeser keluar) */
+        /* Kotak Konten Utama */
         .content-area {
             width: 100%;
             height: 250px;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
+        /* Desain Lapisan Halaman */
         .layer {
-            position: absolute;
+            display: none; /* Sembunyikan semua halaman secara default */
             width: 100%;
-            opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.5s ease;
-            visibility: hidden;
-            display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            animation: fadeIn 0.6s ease forwards;
         }
 
+        /* Hanya tampilkan halaman yang punya kelas .active */
         .layer.active {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
+            display: flex;
         }
 
         .icon {
@@ -167,10 +162,10 @@
             font-weight: 600;
         }
 
-        /* Posisi Tombol yang Dikunci Permanen di Bawah Kartu */
+        /* Tombol Dikunci di Bagian Bawah */
         .btn-group {
             width: 100%;
-            margin-top: auto; /* Memaksa tombol nempel di paling bawah padding kartu */
+            margin-top: auto;
             text-align: center;
         }
 
@@ -195,6 +190,12 @@
             box-shadow: 0 15px 30px rgba(109, 89, 89, 0.3);
         }
 
+        /* --- KEYFRAMES --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -208,32 +209,39 @@
 </head>
 <body>
 
+    <!-- Background Bintang Berkilau -->
     <div class="scenery" id="scenery"></div>
 
+    <!-- Tumpukan Kartu Berlapis -->
     <div class="card-container">
         <div class="card-shadow-1" id="shadow1"></div>
         <div class="card-shadow-2" id="shadow2"></div>
         
         <div class="card">
+            <!-- Penanda Progress Halaman -->
             <div class="progress-container">
                 <div class="bar active" id="bar1"></div>
                 <div class="bar" id="bar2"></div>
                 <div class="bar" id="bar3"></div>
             </div>
 
+            <!-- Tempat Lapisan Surat Berganti -->
             <div class="content-area">
+                <!-- LAPISAN 1 -->
                 <div class="layer active" id="layer1">
                     <div class="icon">✦</div>
                     <h1>Brief Note.</h1>
                     <p>Ada kalanya hari berjalan melelahkan, tapi semoga setelah buka halaman ini, senyum kamu bisa balik lagi. Ada pesan kecil berlapis yang mau aku sampein...</p>
                 </div>
 
+                <!-- LAPISAN 2 -->
                 <div class="layer" id="layer2">
                     <div class="icon">🌸</div>
                     <h1>The Reason.</h1>
                     <p>Nggak ada alasan khusus sih, cuma mau ngingetin kalau kamu itu berharga. Terima kasih ya sudah bertahan, berjuang, dan jadi versi terbaik dari diri kamu sampai hari ini.</p>
                 </div>
 
+                <!-- LAPISAN 3 -->
                 <div class="layer" id="layer3">
                     <div class="icon">✨</div>
                     <h1>Just For You.</h1>
@@ -242,6 +250,7 @@
                 </div>
             </div>
 
+            <!-- Tombol Navigasi -->
             <div class="btn-group">
                 <button class="btn" id="next-btn">NEXT</button>
             </div>
@@ -249,7 +258,7 @@
     </div>
 
     <script>
-        // Efek Bintang
+        // Membikin Efek Bintang Acak
         const scenery = document.getElementById('scenery');
         const starCount = 40;
         for (let i = 0; i < starCount; i++) {
@@ -265,7 +274,7 @@
             scenery.appendChild(star);
         }
 
-        // Logika Tombol Next Berlapis
+        // Jalur Logika Tombol Next Anti-Macet
         let currentLayer = 1;
         const totalLayers = 3;
         const nextBtn = document.getElementById('next-btn');
@@ -273,21 +282,38 @@
         const shadow2 = document.getElementById('shadow2');
 
         nextBtn.addEventListener('click', function() {
-            // Sembunyikan lapisan lama
-            document.getElementById(`layer${currentLayer}`).classList.remove('active');
+            // 1. Ambil halaman lama, buang kelas active-nya
+            const oldLayer = document.getElementById(`layer${currentLayer}`);
+            oldLayer.classList.remove('active');
             
+            // 2. Tambah angka halaman
             currentLayer++;
 
             if (currentLayer <= totalLayers) {
-                // Munculkan lapisan baru
-                document.getElementById(`layer${currentLayer}`).classList.add('active');
+                // 3. Ambil halaman baru, pasang kelas active-nya
+                const newLayer = document.getElementById(`layer${currentLayer}`);
+                newLayer.classList.add('active');
+                
+                // 4. Update bar penunjuk halaman di atas
                 document.getElementById(`bar${currentLayer}`).classList.add('active');
 
-                // Efek gerak tumpukan kartu belakang
+                // 5. Geser variasi posisi bayangan belakang biar kerasa berlapis fisik
                 if (currentLayer === 2) {
                     shadow1.style.transform = 'translateY(16px) scale(0.96) rotate(2deg)';
                     shadow2.style.transform = 'translateY(28px) scale(0.92) rotate(-2deg)';
                 } else if (currentLayer === 3) {
                     shadow1.style.transform = 'translateY(18px) scale(0.97) rotate(-3deg)';
                     shadow2.style.transform = 'translateY(32px) scale(0.93) rotate(3deg)';
-                    nextBtn
+                    nextBtn.innerText = 'CLOSE';
+                }
+            } else {
+                // Skenario pas klik tombol CLOSE di akhir halaman
+                document.querySelector('.card-container').style.transform = 'scale(0.9) translateY(50px)';
+                document.querySelector('.card-container').style.opacity = '0';
+                document.querySelector('.card-container').style.transition = 'all 0.8s ease';
+                nextBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
