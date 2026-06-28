@@ -129,7 +129,6 @@
             font-style: italic;
             font-size: 18px;
             color: #b5838d;
-            animation: fadeIn 1s ease forwards;
         }
 
         /* --- KEYFRAMES ANIMASI --- */
@@ -138,10 +137,6 @@
                 transform: translateY(0);
                 opacity: 1;
             }
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
         }
 
         @keyframes pulse {
@@ -163,10 +158,8 @@
 </head>
 <body>
 
-    <!-- Efek Bunga Berjatuhan -->
     <div class="scenery" id="scenery"></div>
 
-    <!-- Kartu Elegan -->
     <div class="card">
         <div class="icon">✦</div>
         <h1 id="title">Halo, Kamu.</h1>
@@ -174,9 +167,8 @@
         <p id="main-text">
             "Ada beberapa hal yang ga perlu alasan, salah satunya adalah alasan kenapa hari ini kamu terlihat luar biasa. Terima kasih ya sudah berusaha sejauh ini. Semangat buat hari ini!"
         </p>
-        <button class="btn" onclick="revealMessage()">CLICK ME</button>
+        <button class="btn" id="action-btn">CLICK ME</button>
         
-        <!-- Pesan Tersembunyi saat di-klik -->
         <div class="hidden-message" id="secret">
             Take care of yourself, okay? ✨
         </div>
@@ -191,25 +183,22 @@
             const petal = document.createElement('div');
             petal.classList.add('petal');
             
-            // Variasi ukuran, posisi, dan kecepatan kelopak bunga
             const size = Math.random() * 12 + 8;
             petal.style.width = `${size}px`;
             petal.style.height = `${size}px`;
             petal.style.left = `${Math.random() * 100}vw`;
-            petal.style.delay = `${Math.random() * 8}s`;
+            petal.style.animationDelay = `${Math.random() * 8}s`;
             petal.style.animationDuration = `${Math.random() * 6 + 6}s`;
             
             scenery.appendChild(petal);
         }
 
-        // Fungsi interaktif pas tombol diklik
-        function revealMessage() {
+        // Sistem klik tombol yang kompatibel di semua browser dan hosting
+        document.getElementById('action-btn').addEventListener('click', function() {
             const secret = document.getElementById('secret');
-            const btn = document.querySelector('.btn');
-            
             secret.style.display = 'block';
-            btn.style.display = 'none'; // Menghilangkan tombol setelah diklik
-        }
+            this.style.display = 'none'; // Menyembunyikan tombol setelah diklik
+        });
     </script>
 </body>
 </html>
