@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You ✨</title>
+    <title>A Special Letter For You ✨</title>
     <style>
-        /* Menggunakan font yang elegan dan modern */
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
 
         * {
             margin: 0;
@@ -15,7 +14,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,7 +24,7 @@
             perspective: 1000px;
         }
 
-        /* Efek Kelopak Bunga Berjatuhan (Aesthetic Canvas) */
+        /* Latar Belakang Partikel Bintang & Kelopak */
         .scenery {
             position: absolute;
             width: 100%;
@@ -36,123 +35,167 @@
             pointer-events: none;
         }
 
-        .petal {
+        .star {
             position: absolute;
-            background: linear-gradient(to bottom right, #ffb7b2, #ffdac1);
-            border-radius: 150% 0 150% 150%;
-            opacity: 0.7;
-            animation: float 10s infinite linear;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+            opacity: 0.5;
         }
 
-        /* Kartu Utama */
-        .card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 40px 30px;
-            border-radius: 24px;
+        /* Container Utama Kartu */
+        .card-container {
+            position: relative;
             width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(165, 140, 140, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            max-width: 420px;
+            height: 480px;
             z-index: 10;
-            transform: translateY(30px);
-            opacity: 0;
-            animation: fadeInUp 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* Bagian Atas / Dekorasi Icon */
+        /* Efek Lapisan Kartu di Belakang (Stacking Effect) */
+        .card-shadow-1, .card-shadow-2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .card-shadow-1 { transform: translateY(12px) scale(0.95); z-index: 8; opacity: 0.7; }
+        .card-shadow-2 { transform: translateY(24px) scale(0.90); z-index: 7; opacity: 0.4; }
+
+        /* Kartu Utama Berlapisan Konten */
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px 35px;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            z-index: 9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Progress Bar di Atas Kartu */
+        .progress-container {
+            display: flex;
+            gap: 8px;
+            width: 60px;
+            margin-bottom: 10px;
+        }
+
+        .bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: all 0.4s ease;
+        }
+
+        .bar.active {
+            background: #b5838d;
+        }
+
+        /* Bagian Konten yang Berganti */
+        .layer {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layer.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .icon {
-            font-size: 28px;
+            font-size: 32px;
             color: #e5989b;
             margin-bottom: 20px;
-            display: inline-block;
             animation: pulse 2s infinite ease-in-out;
         }
 
-        /* Judul yang Elegan (Serif Font) */
         h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 600;
-            color: #6d5959;
-            letter-spacing: 1px;
+            color: #4a3f3f;
             margin-bottom: 15px;
+            letter-spacing: 0.5px;
         }
 
-        /* Garis Pembatas Minimalis */
-        .line {
-            width: 50px;
-            height: 1px;
-            background-color: #b5838d;
-            margin: 0 auto 25px auto;
-        }
-
-        /* Teks Pesan */
         p {
-            font-size: 14px;
-            color: #807a7a;
+            font-size: 14.5px;
+            color: #6b6060;
             line-height: 1.8;
             font-weight: 300;
-            margin-bottom: 30px;
         }
 
-        /* Tombol Interaktif */
+        /* Desain Tombol Mewah */
+        .btn-group {
+            width: 100%;
+            margin-top: 20px;
+        }
+
         .btn {
-            display: inline-block;
-            padding: 12px 35px;
+            padding: 12px 40px;
             background-color: #b5838d;
             color: white;
-            text-decoration: none;
             border-radius: 50px;
             font-size: 13px;
             letter-spacing: 2px;
-            font-weight: 400;
-            box-shadow: 0 8px 20px rgba(181, 131, 141, 0.3);
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(181, 131, 141, 0.25);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
         }
 
         .btn:hover {
             background-color: #6d5959;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(109, 89, 89, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(109, 89, 89, 0.3);
         }
 
-        /* Pop-up Pesan Rahasia */
-        .hidden-message {
-            display: none;
-            margin-top: 25px;
+        /* Efek khusus halaman akhir */
+        .special-accent {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 18px;
+            font-size: 22px;
             color: #b5838d;
+            margin-top: 15px;
+            font-weight: 600;
         }
 
-        /* --- KEYFRAMES ANIMASI --- */
-        @keyframes fadeInUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
+        /* --- ANIMASI KEYFRAMES --- */
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(-10vh) translateX(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(105vh) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.9; transform: scale(1.2); }
         }
     </style>
 </head>
@@ -160,44 +203,101 @@
 
     <div class="scenery" id="scenery"></div>
 
-    <div class="card">
-        <div class="icon">✦</div>
-        <h1 id="title">Halo, Kamu.</h1>
-        <div class="line"></div>
-        <p id="main-text">
-            "Ada beberapa hal yang ga perlu alasan, salah satunya adalah alasan kenapa hari ini kamu terlihat luar biasa. Terima kasih ya sudah berusaha sejauh ini. Semangat buat hari ini!"
-        </p>
-        <button class="btn" id="action-btn">CLICK ME</button>
+    <div class="card-container">
+        <div class="card-shadow-1" id="shadow1"></div>
+        <div class="card-shadow-2" id="shadow2"></div>
         
-        <div class="hidden-message" id="secret">
-            Take care of yourself, okay? ✨
+        <div class="card">
+            <div class="progress-container">
+                <div class="bar active" id="bar1"></div>
+                <div class="bar" id="bar2"></div>
+                <div class="bar" id="bar3"></div>
+            </div>
+
+            <div class="layer active" id="layer1">
+                <div class="icon">✦</div>
+                <h1>Brief Note.</h1>
+                <p>Ada kalanya hari berjalan melelahkan, tapi semoga setelah buka halaman ini, senyum kamu bisa balik lagi. Ada pesan kecil berlapis yang mau aku sampein...</p>
+            </div>
+
+            <div class="layer" id="layer2">
+                <div class="icon">🌸</div>
+                <h1>The Reason.</h1>
+                <p>Nggak ada alasan khusus sih, cuma mau ngingetin kalau kamu itu berharga. Terima kasih ya sudah bertahan, berjuang, dan jadi versi terbaik dari diri kamu sampai hari ini.</p>
+            </div>
+
+            <div class="layer" id="layer3">
+                <div class="icon">✨</div>
+                <h1>Just For You.</h1>
+                <p>Semoga harimu selalu dipenuhi hal-hal baik, tenang, dan menyenangkan. Jangan lupa istirahat yang cukup ya.</p>
+                <div class="special-accent">Take care always.</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" id="next-btn">NEXT</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Membuat kelopak bunga acak secara otomatis
+        // Membuat Partikel Bintang Berkilau di Background otomatis
         const scenery = document.getElementById('scenery');
-        const petalCount = 25;
+        const starCount = 40;
 
-        for (let i = 0; i < petalCount; i++) {
-            const petal = document.createElement('div');
-            petal.classList.add('petal');
-            
-            const size = Math.random() * 12 + 8;
-            petal.style.width = `${size}px`;
-            petal.style.height = `${size}px`;
-            petal.style.left = `${Math.random() * 100}vw`;
-            petal.style.animationDelay = `${Math.random() * 8}s`;
-            petal.style.animationDuration = `${Math.random() * 6 + 6}s`;
-            
-            scenery.appendChild(petal);
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const size = Math.random() * 3 + 2;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.animationDelay = `${Math.random() * 3}s`;
+            star.style.animationDuration = `${Math.random() * 2 + 2}s`;
+            scenery.appendChild(star);
         }
 
-        // Sistem klik tombol yang kompatibel di semua browser dan hosting
-        document.getElementById('action-btn').addEventListener('click', function() {
-            const secret = document.getElementById('secret');
-            secret.style.display = 'block';
-            this.style.display = 'none'; // Menyembunyikan tombol setelah diklik
+        // Logika Perpindahan Lapisan Kartu (Multi-Step)
+        let currentLayer = 1;
+        const totalLayers = 3;
+        const nextBtn = document.getElementById('next-btn');
+        const shadow1 = document.getElementById('shadow1');
+        const shadow2 = document.getElementById('shadow2');
+
+        nextBtn.addEventListener('click', function() {
+            // Sembunyikan lapisan yang sekarang aktif
+            document.getElementById(`layer${currentLayer}`).classList.remove('active');
+            document.getElementById(`layer${currentLayer}`).style.display = 'none';
+            
+            currentLayer++;
+
+            if (currentLayer <= totalLayers) {
+                // Tampilkan lapisan berikutnya dengan animasi delay halus
+                const nextLayer = document.getElementById(`layer${currentLayer}`);
+                nextLayer.style.display = 'flex';
+                setTimeout(() => {
+                    nextLayer.classList.add('active');
+                }, 50);
+
+                // Update Progress Bar atas
+                document.getElementById(`bar${currentLayer}`).classList.add('active');
+
+                // Berikan efek perubahan bentuk bayangan belakang tiap halaman di-klik
+                if (currentLayer === 2) {
+                    shadow1.style.transform = 'translateY(16px) scale(0.96) rotate(2deg)';
+                    shadow2.style.transform = 'translateY(28px) scale(0.92) rotate(-2deg)';
+                } else if (currentLayer === 3) {
+                    shadow1.style.transform = 'translateY(18px) scale(0.97) rotate(-3deg)';
+                    shadow2.style.transform = 'translateY(32px) scale(0.93) rotate(3deg)';
+                    nextBtn.innerText = 'CLOSE'; // Ubah teks tombol di halaman akhir
+                }
+            } else {
+                // Jika tombol CLOSE di halaman akhir di-klik, kartu akan menutup pelan-collapse
+                document.querySelector('.card-container').style.transform = 'scale(0.9) translateY(50px)';
+                document.querySelector('.card-container').style.opacity = '0';
+                document.querySelector('.card-container').style.transition = 'all 0.8s ease';
+                nextBtn.disabled = true;
+            }
         });
     </script>
 </body>
